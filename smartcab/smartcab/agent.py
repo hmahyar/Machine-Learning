@@ -7,7 +7,7 @@ import numpy as np
 class LearningAgent(Agent):
     """An agent that learns to drive in the smartcab world."""
 
-    def __init__(self, env, learning_rate=0.7, discount_factor=0.4):
+    def __init__(self, env, learning_rate=0.71, discount_factor=0.36):
         super(LearningAgent, self).__init__(env)  # sets self.env = env, state = None, next_waypoint = None, and a default color
         self.color = 'red'  # override color
         self.planner = RoutePlanner(self.env, self)  # simple route planner to get next_waypoint
