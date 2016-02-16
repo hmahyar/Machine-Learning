@@ -7,7 +7,7 @@ import numpy as np
 class LearningAgent(Agent):
     """An agent that learns to drive in the smartcab world."""
 
-    def __init__(self, env, learning_rate=0.71, discount_factor=0.36):
+    def __init__(self, env, learning_rate=0.78, discount_factor=0.36):
         super(LearningAgent, self).__init__(env)  # sets self.env = env, state = None, next_waypoint = None, and a default color
         self.color = 'red'  # override color
         self.planner = RoutePlanner(self.env, self)  # simple route planner to get next_waypoint
@@ -68,11 +68,11 @@ def run():
     # Set up environment and agent
     e = Environment()  # create environment (also adds some dummy traffic)
     a = e.create_agent(LearningAgent)  # create agent
-    e.set_primary_agent(a, enforce_deadline=False)  # set agent to track
+    e.set_primary_agent(a, enforce_deadline=True)  # set agent to track
 
     # Now simulate it
-    sim = Simulator(e, update_delay=1.0)  # reduce update_delay to speed up simulation
-    sim.run(n_trials=10)  # press Esc or close pygame window to quit
+    sim = Simulator(e, update_delay=0.5)  # reduce update_delay to speed up simulation
+    sim.run(n_trials=50)  # press Esc or close pygame window to quit
 
 
 if __name__ == '__main__':
