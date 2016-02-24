@@ -2,26 +2,38 @@
 
 import os
 import pandas as pd
+import numpy as np
+from datetime import datetime 
 from collections import defaultdict
 
 class FileSize(object):
-	#Model = 
-	
-	def FeatureExtraction(self,url):
+	def __init__(self):
+		pass
+	def FeatureExtraction(self,data):
 		try:
-			url = url.encode('ISO-8859-1').split('/')
-			host  = url[2]
-			extention = url[-1]
-			return host,extention
+			file_size=1
+			if data[0]!='-':
+				file_size = int(np.ceil(np.log2(int(data[0]))))
+				if file_size<19:
+					file_size=19
+			else:
+				file_size=19
+	
+			host  = data[1].split('/')[2]
+			extention = data[1].split('/')[-1].split('.')[-1]
+			IsMobile = data[2]
+			data_type = data[3]
+			return [host,extention,IsMobile,data_type,file_size]
 		except:
-			return None,None
-
+			return None
+	
 	def UpdateTree(self,node,features):
-		print node,'  ',features
-		raw_input('')
-		if len(features)>0:
+		if features != None:
 			if features[0] in node:
-				self.UpdateTree(node[features[0]],features[1:])
+				if len(features)>1:
+					self.UpdateTree(node[features[0]],features[1:])
+				else:
+					node.append(features[0])
 			else:
 				if len(features)==1:
 					node.append(features[0])
@@ -31,23 +43,44 @@ class FileSize(object):
 				else:
 					node[features[0]] = defaultdict(dict)
 				self.UpdateTree(node,features)
-		else:
-			return None
+	
 	def BuildTree(self,TrainingPath):
+		print 'Start Building Tree at: ',datetime.now()
 		self.tree = defaultdict()
-		self.df = pd.read_csv(TrainingPath,error_bad_lines=False,nrows=1000,sep='\t')
+		self.df = pd.read_csv(TrainingPath,error_bad_lines=False,nrows=100000,sep='\t')
 		for i,v in self.df.iterrows():
-			self.file_size = v[0]
-			self.host,self.extention = self.FeatureExtraction(v[1])
-			self.IsMobile = v[2]
-			self.data_type = v[3]
-			self.UpdateTree(self.tree,[self.host,self.extention,self.IsMobile,self.data_type,self.file_size])
-			print self.tree
-			print '\n-----------------------\n'
-			raw_input('')
+			self.UpdateTree(self.tree,self.FeatureExtraction(v))
+		print 'Number of Fist level Nodes: ',len(self.tree)
+		return self.tree
+		
+	def Prediction(self,node,features):
+		if features != None:
+			try:
+				if len(features)>1:
+					if features[0] in node:
+						return self.Prediction(node[features[0]],features[1:])
+					else:
+						self.UpdateTree(node,features)
+						return 19
+				else:
+					return int(np.median(node))
+			except:
+				print 'Error'
+				return None
+				
 
-
-
-
+c=0
+b=0
+TrainingPath = '../../../DataSet/Cache/W1/model.csv'
 fs = FileSize()
-fs.BuildTree('../../../DataSet/Cache/W1/model.csv')
+tree = fs.BuildTree(TrainingPath)
+print 'Start Prediction Tree at: ',datetime.now()
+for i,v in pd.read_csv(TrainingPath,error_bad_lines=False,nrows=20000,sep='\t',skiprows=100000).iterrows():
+	features = fs.FeatureExtraction(v)
+	b+=1
+	#print b
+	result = fs.Prediction(tree, features)
+	if result!= None and features[-1]==fs.Prediction(tree, features):
+		c+=1
+print 'Precision: ',c*100/20000
+	
