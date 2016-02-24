@@ -1,0 +1,53 @@
+#Creating The Model With ID3
+
+import os
+import pandas as pd
+from collections import defaultdict
+
+class FileSize(object):
+	#Model = 
+	
+	def FeatureExtraction(self,url):
+		try:
+			url = url.encode('ISO-8859-1').split('/')
+			host  = url[2]
+			extention = url[-1]
+			return host,extention
+		except:
+			return None,None
+
+	def UpdateTree(self,node,features):
+		print node,'  ',features
+		raw_input('')
+		if len(features)>0:
+			if features[0] in node:
+				self.UpdateTree(node[features[0]],features[1:])
+			else:
+				if len(features)==1:
+					node.append(features[0])
+					return None
+				elif len(features)==2:
+					node[features[0]] = []
+				else:
+					node[features[0]] = defaultdict(dict)
+				self.UpdateTree(node,features)
+		else:
+			return None
+	def BuildTree(self,TrainingPath):
+		self.tree = defaultdict()
+		self.df = pd.read_csv(TrainingPath,error_bad_lines=False,nrows=1000,sep='\t')
+		for i,v in self.df.iterrows():
+			self.file_size = v[0]
+			self.host,self.extention = self.FeatureExtraction(v[1])
+			self.IsMobile = v[2]
+			self.data_type = v[3]
+			self.UpdateTree(self.tree,[self.host,self.extention,self.IsMobile,self.data_type,self.file_size])
+			print self.tree
+			print '\n-----------------------\n'
+			raw_input('')
+
+
+
+
+fs = FileSize()
+fs.BuildTree('../../../DataSet/Cache/W1/model.csv')
