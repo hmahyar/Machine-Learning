@@ -70,11 +70,11 @@ class FileSize(object):
 						return 0
 				else:
 					if features[0] in node:
-						#b = Counter(node).most_common()
-						#rnd =  random.randint(1,999)
-						#temp =  [(int(float(x[1])/sum(node[features[0]].values())*1000)) for x in Counter(node[features[0]]).most_common()]
-						#for x in range(len(temp)):
-							#if rnd<sum(temp[x:]):
+						 b = Counter(node).most_common()
+						 rnd =  random.randint(1,999)
+						 temp =  [(int(float(x[1])/sum(node[features[0]].values())*1000)) for x in Counter(node[features[0]]).most_common()]
+						 for x in range(len(temp)):
+							if rnd<sum(temp[x:]):
 								#return b[x][0]
 						result =  sorted(Counter(node[features[0]]).most_common(),key=lambda x:-x[1])[0][0]
 						return result
