@@ -24,28 +24,10 @@ class color:
 
 class FileSize(object):
 	def __init__(self):
+		self.precision=0
 		self.byDefault=0
 		self.default_label=19
 		self.report  = np.zeros((10,10), dtype=int)
-	def FeatureExtraction(self,data):
-		try:
-			file_size=1
-			if data[0]!='-':
-				file_size = int(np.ceil(np.log2(int(data[0]))))
-				if file_size<19:
-					file_size=19
-					
-			else:
-				file_size=19
-	
-			host  = data[1].split('/')[2]
-			extention = data[1].split('/')[-1].split('.')[-1]
-			IsMobile = data[2]
-			data_type = data[3]
-			UrlLen = len(data[1])
-			return [host,extention,data_type,IsMobile,file_size]
-		except:
-			return None
 	
 	def UpdateTree(self,node,features):
 		if features != None:
@@ -88,10 +70,12 @@ class FileSize(object):
 						return 0
 				else:
 					if features[0] in node:
-						if(len(sorted(Counter(node[features[0]]).most_common(),key=lambda x:-x[1])))>3:
-							#print len(sorted(Counter(node[features[0]]).most_common(),key=lambda x:-x[1]))
-							#raw_input('\n----\n')
-							pass
+						#b = Counter(node).most_common()
+						#rnd =  random.randint(1,999)
+						#temp =  [(int(float(x[1])/sum(node[features[0]].values())*1000)) for x in Counter(node[features[0]]).most_common()]
+						#for x in range(len(temp)):
+							#if rnd<sum(temp[x:]):
+								#return b[x][0]
 						result =  sorted(Counter(node[features[0]]).most_common(),key=lambda x:-x[1])[0][0]
 						return result
 					else:
@@ -146,8 +130,11 @@ class FileSize(object):
 				result = self.default_label
 
 			label = v[-1]
-			self.report[label-19][result-19]+=1
-		self.reports(self.report)
+			if label==result:
+				self.precision+=1
+			#self.report[label-19][result-19]+=1
+		#self.reports(self.report)
+		print "Precision: ",self.precision*100/len(test_data)
 
 
 

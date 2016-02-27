@@ -11,19 +11,19 @@ c=0
 for line in logfile:
 	if c<=500000:
 		url= line.split('\t')[1].lower().split('/')[2].strip()
-		if len(line.split('\t')[1].split('/')[-1].split('.')[-1])<4 \
-			and not url.startswith('ec-media.soundcloud')\
-			and not url.startswith('ec-hls-media.soundcloud') \
-			and not url.startswith('wpc.a310.edgecastcdn')\
-			and not url.startswith('wac.a310.edgecastcdn')\
-			and not url.startswith('fc09.deviantart')\
-			and not url.startswith('wpc.970a.edgecastcdn')\
-			and not url.startswith('wpc.970A.edgecastcdn')\
-			and not url.startswith('wpc.573d.edgecastcdn')\
-			and not url.startswith('fc03.deviantart')\
-			and not url.startswith('fc00.deviantart')\
-			and not url.startswith('fc02.deviantart')\
-			and line.split('\t')[0]!='-':
+		if line.split('\t')[0]!='-':
+			#len(line.split('\t')[1].split('/')[-1].split('.')[-1])<4 \
+			#and not url.startswith('ec-media.soundcloud')\
+			#and not url.startswith('ec-hls-media.soundcloud') \
+			#and not url.startswith('wpc.a310.edgecastcdn')\
+			#and not url.startswith('wac.a310.edgecastcdn')\
+			#and not url.startswith('fc09.deviantart')\
+			#and not url.startswith('wpc.970a.edgecastcdn')\
+			#and not url.startswith('wpc.970A.edgecastcdn')\
+			#and not url.startswith('wpc.573d.edgecastcdn')\
+			#and not url.startswith('fc03.deviantart')\
+			#and not url.startswith('fc00.deviantart')\
+			#and not url.startswith('fc02.deviantart')\
 				#try:
 					data = line.split('\t')
 					if(int(data[0]))>0:
