@@ -70,11 +70,11 @@ class FileSize(object):
 						return 0
 				else:
 					if features[0] in node:
-						 b = Counter(node).most_common()
-						 rnd =  random.randint(1,999)
-						 temp =  [(int(float(x[1])/sum(node[features[0]].values())*1000)) for x in Counter(node[features[0]]).most_common()]
-						 for x in range(len(temp)):
-							if rnd<sum(temp[x:]):
+						 #b = Counter(node).most_common()
+						 #rnd =  random.randint(1,999)
+						 #temp =  [(int(float(x[1])/sum(node[features[0]].values())*1000)) for x in Counter(node[features[0]]).most_common()]
+						 #for x in range(len(temp)):
+							#if rnd<sum(temp[x:]):
 								#return b[x][0]
 						result =  sorted(Counter(node[features[0]]).most_common(),key=lambda x:-x[1])[0][0]
 						return result
@@ -85,9 +85,10 @@ class FileSize(object):
 	def reports(self,report):
 		print '----------------------------Report-------------------------------'
 		print '-----------------------------------------------------------------\n\n'
-		line = 'H\t     '
+		line = 'H\t   '
 		for header in range(len(report)):
-			line +=  str(header)+'|'+'\t     '
+			header+=19
+			line +=  str(header)+'|'+'\t   '
 		print color.GREEN+color.BOLD+line+'Recall'+color.END
 		line =''
 		f1 =[]
@@ -132,8 +133,8 @@ class FileSize(object):
 			label = v[-1]
 			if label==result:
 				self.precision+=1
-			#self.report[label-19][result-19]+=1
-		#self.reports(self.report)
+			self.report[label-19][result-19]+=1
+		self.reports(self.report)
 		print "Precision: ",self.precision*100/len(test_data)
 
 
